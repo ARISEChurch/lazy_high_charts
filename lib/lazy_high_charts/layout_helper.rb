@@ -106,12 +106,28 @@ module LazyHighCharts
         #{js_end}
         EOJS
       # Turbolinks >= 5
-      elsif defined?(Turbolinks) && request_turbolinks_5_tureferrer?
+      elsif defined?(Turbolinks) && is_turbolinks_5?
         js_output =<<-EOJS
         #{js_start}
-          document.addEventListener("turbolinks:load", function() {
+          var f = function()
+          {
             #{core_js}
-          });
+          }
+          if(typeof Turbolinks == "object")
+          {
+            document.addEventListener("turbolinks:load", function(e) {
+              e.target.removeEventListener(e.type, arguments.callee);
+              f();
+            });
+          }
+          else
+          {
+            var onload = window.onload;
+            window.onload = function(){
+              if (typeof onload == "function") onload();
+              f();
+            };
+          }
         #{js_end}
         EOJS
       else
