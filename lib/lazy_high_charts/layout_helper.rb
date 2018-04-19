@@ -106,7 +106,7 @@ module LazyHighCharts
         #{js_end}
         EOJS
       # Turbolinks >= 5
-      elsif defined?(Turbolinks) && is_turbolinks_5?
+      elsif defined?(Turbolinks)
         js_output =<<-EOJS
         #{js_start}
           var f = function()
